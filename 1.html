@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A beginner-friendly and professional guide to IP Security (IPSec) with visuals, simplified explanations for kids, and detailed notes for experts.">
+    <title>IP Security (IPSec) Explained Simply</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232566eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2a10 10 0 0 0-10 10c0 5.5 4.5 10 10 10s10-4.5 10-10S17.5 2 12 2z'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E">
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
+        .collapsible-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
+            overflow: hidden;
+            opacity: 1;
+            max-height: 4000px;
+        }
+        .collapsible-content.hidden {
+            max-height: 0;
+            opacity: 0;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+        .prose table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        .prose th, .prose td {
+            border: 1px solid #d1d5db;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .prose th {
+            background-color: #eff6ff;
+            font-weight: 600;
+        }
+        .prose tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        .toc-list a {
+            color: #1d4ed8;
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
+        }
+        .toc-list a:hover {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+        .collapsible-header:focus {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
+        /* Tooltip styling */
+        .tooltip {
+            position: relative;
+        }
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #1f2937;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        /* Image caption */
+        .image-caption {
+            font-size: 0.875rem;
+            color: #4b5563;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        /* Kid-friendly section */
+        .kid-section {
+            background-color: #fefce8;
+            border: 2px solid #facc15;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 leading-relaxed antialiased">
+
+    <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-12 shadow-2xl">
+        <div class="container mx-auto px-4 text-center">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' width='48' height='48'%3E%3Cpath d='M12 2a10 10 0 0 0-10 10c0 5.5 4.5 10 10 10s10-4.5 10-10S17.5 2 12 2z'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E" alt="IPSec Logo" class="mx-auto mb-4 w-12 h-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">IP Security (IPSec) Explained</h1>
+            <p class="text-xl opacity-90 max-w-3xl mx-auto">Discover how IPSec keeps internet communication safe with fun visuals for kids and in-depth details for professionals.</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-12">
+
+        <!-- Table of Contents -->
+        <section class="bg-white shadow-xl rounded-xl p-8 mb-12">
+            <h2 class="text-3xl font-semibold mb-6 text-blue-800 border-b-2 border-blue-200 pb-4">Table of Contents</h2>
+            <ul class="list-disc list-inside toc-list space-y-3 text-lg">
+                <li><a href="#what-is-ipsec">What is IPSec and Why Do We Need It?</a></li>
+                <li><a href="#ipsec-protocols">IPSec Protocols: AH and ESP</a></li>
+                <li><a href="#ipsec-modes">IPSec Modes: Transport vs. Tunnel</a></li>
+                <li><a href="#security-associations">Security Associations (SA)</a></li>
+                <li><a href="#key-management">Key Management: Manual vs. Automatic</a></li>
+                <li><a href="#internet-key-exchange">Internet Key Exchange (IKE)</a></li>
+                <li><a href="#crypto-algorithms">Cryptographic Algorithms</a></li>
+                <li><a href="#ipsec-applications">Real-World Applications</a></li>
+                <li><a href="#ah-vs-esp">AH vs. ESP Comparison</a></li>
+                <li><a href="#summary">Summary</a></li>
+                <li><a href="#resources">Resources</a></li>
+            </ul>
+        </section>
+
+        <!-- What is IPSec -->
+        <section class="bg-white shadow-xl rounded-xl p-8 mb-12">
+            <h2 id="what-is-ipsec" class="text-3xl font-semibold mb-6 text-blue-800 border-b-2 border-blue-200 pb-4 cursor-pointer flex justify-between items-center collapsible-header" tabindex="0" role="button" aria-expanded="false">
+                What is IPSec and Why Do We Need It?
+                <i class="fas fa-chevron-up text-blue-600 transition-transform duration-300"></i>
+            </h2>
+            <div class="collapsible-content prose max-w-none border border-gray-200 rounded-b-lg p-6 hidden">
+                <div class="kid-section">
+                    <h3 class="text-xl font-semibold text-yellow-600 mb-3 flex items-center">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>For Kids: Like a Secret Clubhouse
+                    </h3>
+                    <p>Imagine you’re sending a secret note to your friend in a clubhouse. You don’t want anyone else to read it or change it. IPSec is like a magic lock and key that keeps your note safe. It makes sure only your friend can open it, and it checks that nobody messed with it on the way!</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1516321310767-0f6c0af4a413?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Network security illustration" class="w-full max-w-2xl mx-auto rounded-lg shadow-md mb-4">
+                <p class="image-caption">IPSec secures data packets across networks.</p>
+                <p><strong>IPSec (Internet Protocol Security)</strong> is a suite of protocols that secures IP communications at the network layer (Layer 3). Unlike application-layer security (e.g., HTTPS), IPSec protects all IP traffic, making it versatile for various applications.</p>
+                <p><strong>Core Objectives:</strong></p>
+                <ul class="list-disc pl-6">
+                    <li><span class="tooltip"><strong>Confidentiality</strong><span class="tooltip-text">Ensures data is unreadable to unauthorized parties.</span></span>: Encrypts packet payloads.</li>
+                    <li><span class="tooltip"><strong>Integrity</strong><span class="tooltip-text">Detects any unauthorized changes to data.</span></span>: Uses checksums to verify data authenticity.</li>
+                    <li><span class="tooltip"><strong>Authentication</strong><span class="tooltip-text">Confirms the sender’s identity.</span></span>: Verifies source and destination.</li>
+                </ul>
+                <p><strong>Technical Details:</strong> IPSec operates in the IP layer, adding headers (AH/ESP) to packets. It’s defined in RFC 4301 and supports IPv4/IPv6. For professionals, IPSec’s strength lies in its flexibility—securing VPNs, server communications, or IoT devices—while maintaining performance through hardware acceleration in modern routers.</p>
+            </div>
+        </section>
+
+        <!-- IPSec Protocols -->
+        <section class="bg-white shadow-xl rounded-xl p-8 mb-12">
+            <h2 id="ipsec-protocols" class="text-3xl font-semibold mb-6 text-blue-800 border-b-2 border-blue-200 pb-4 cursor-pointer flex justify-between items-center collapsible-header" tabindex="0" role="button" aria-expanded="false">
+                IPSec Protocols: AH and ESP
+                <i class="fas fa-chevron-up text-blue-600 transition-transform duration-300"></i>
+            </h2>
+            <div class="collapsible-content prose max-w-none border border-gray-200 rounded-b-lg p-6 hidden">
+                <div class="kid-section">
+                    <h3 class="text-xl font-semibold text-yellow-600 mb-3 flex items-center">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>For Kids: Two Superhero Guards
+                    </h3>
+                    <p>Think of your note being protected by two superheroes: AH and ESP. AH is like a guard who checks if anyone touched your note. ESP is a super guard who hides your note in a secret code and checks it too!</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Encryption illustration" class="w-full max-w-2xl mx-auto rounded-lg shadow-md mb-4">
+                <p class="image-caption">AH and ESP secure packets differently.</p>
+                <h3 class="text-2xl font-medium mt-6 mb-3 text-blue-700">1. Authentication Header (AH)</h3>
+                <p>AH ensures data integrity and sender authentication without encryption.</p>
+                <ul class="list-disc pl-6">
+                    <li><strong>Functions:</strong>
+                        <ul class="list-circle pl-6">
+                            <li><strong>Integrity:</strong> Uses HMAC for tamper detection.</li>
+                            <li><strong>Authentication:</strong> Verifies sender via cryptographic signatures.</li>
+                            <li><strong>Replay Protection:</strong> Uses sequence numbers.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Limitation:</strong> No confidentiality.</li>
+                    <li><strong>Technical:</strong> Protocol 51, adds AH header with Integrity Check Value (ICV).</li>
+                </ul>
+                <h3 class="text-2xl font-medium mt-6 mb-3 text-blue-700">2. Encapsulating Security Payload (ESP)</h3>
+                <p>ESP provides encryption, authentication, and integrity.</p>
+                <ul class="list-disc pl-6">
+                    <li><strong>Functions:</strong>
+                        <ul class="list-circle pl-6">
+                            <li><strong>Confidentiality:</strong> Encrypts payload (e.g., AES-256).</li>
+                            <li><strong>Integrity/Authentication:</strong> Optional HMAC.</li>
+                            <li><strong>Replay Protection:</strong> Sequence numbers.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Technical:</strong> Protocol 50, includes header, trailer, and ICV.</li>
+                </ul>
+                <p><strong>For Professionals:</strong> ESP is preferred due to its encryption, critical for VPNs. AH is rarely used alone but can complement ESP in high-security scenarios requiring header authentication. Example configuration:</p>
+                <pre class="bg-gray-800 text-white p-4 rounded-lg text-sm">
+crypto ipsec transform-set MY_SET esp-aes-256 esp-sha256-hmac
+mode tunnel
+                </pre>
+            </div>
+        </section>
+
+        <!-- IPSec Modes -->
+        <section class="bg-white shadow-xl rounded-xl p-8 mb-12">
+            <h2 id="ipsec-modes" class="text-3xl font-semibold mb-6 text-blue-800 border-b-2 border-blue-200 pb-4 cursor-pointer flex justify-between items-center collapsible-header" tabindex="0" role="button" aria-expanded="false">
+                IPSec Modes: Transport vs. Tunnel
+                <i class="fas fa-chevron-up text-blue-600 transition-transform duration-300"></i>
+            </h2>
+            <div class="collapsible-content prose max-w-none border border-gray-200 rounded-b-lg p-6 hidden">
+                <div class="kid-section">
+                    <h3 class="text-xl font-semibold text-yellow-600 mb-3 flex items-center">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>For Kids: Hiding Your Note
+                    </h3>
+                    <p>Transport mode is like hiding just the words in your note, but everyone sees where it’s going. Tunnel mode hides the whole note and puts it in a new envelope, so nobody knows who sent it or where it’s going!</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1558499932-9609acb6f443?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="VPN tunnel illustration" class="w-full max-w-2xl mx-auto rounded-lg shadow-md mb-4">
+                <p class="image-caption">Tunnel mode encapsulates entire packets.</p>
+                <h3 class="text-2xl font-medium mt-6 mb-3 text-blue-700">1. Transport Mode</h3>
+                <p>Protects the packet payload, leaving the IP header intact.</p>
+                <ul class="list-disc pl-6">
+                    <li><strong>Scope:</strong> Payload only.</li>
+                    <li><strong>Use Case:</strong> Host-to-host communication.</li>
+                    <li><strong>Diagram:</strong> [IP Header | AH/ESP | Payload]</li>
+                </ul>
+                <h3 class="text-2xl font-medium mt-6 mb-3 text-blue-700">2. Tunnel Mode</h3>
+                <p>Encapsulates the entire packet in a new IP packet.</p>
+                <ul class="list-disc pl-6">
+                    <li><strong>Scope:</strong> Entire packet.</li>
+                    <li><strong>Use Case:</strong> VPNs (site-to-site, remote access).</li>
+                    <li><strong>Diagram:</strong> [New IP Header | AH/ESP | Original IP Header | Payload]</li>
+                </ul>
+                <p><strong>For Professionals:</strong> Tunnel mode is standard for VPNs, enabling private IP traffic over public networks. Example Cisco configuration:</p>
+                <pre class="bg-gray-800 text-white p-4 rounded-lg text-sm">
+crypto map MY_MAP 10 ipsec-isakmp
+set peer 192.168.1.1
+set transform-set MY_SET
+match address VPN_ACL
+                </pre>
+            </div>
+        </section>
+
+        <!-- Security Associations -->
+        <section class="bg-white shadow-xl rounded-xl p-8 mb-12">
+            <h2 id="security-associations" class="text-3xl font-semibold mb-6 text-blue-800 border-b-2 border-blue-200 pb-4 cursor-pointer flex justify-between items-center collapsible-header" tabindex="0" role="button" aria-expanded="false">
+                Security Associations (SA)
+                <i class="fas fa-chevron-up text-blue-600 transition-transform duration-300"></i>
+            </h2>
+            <div class="collapsible-content prose max-w-none border border-gray-200 rounded-b-lg p-6 hidden">
+                <div class="kid-section">
+                    <h3 class="text-xl font-semibold text-yellow-600 mb-3 flex items-center">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>For Kids: A Secret Handshake
+                    </h3>
+                    <p>An SA is like a secret handshake between two friends. They agree on how to keep their notes safe, like using a special code or lock, so nobody else can mess with them.</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Network agreement illustration" class="w-full max-w-2xl mx-auto rounded-lg shadow-md mb-4">
+                <p class="image-caption">SAs define secure communication rules.</p>
+                <p>A <strong>Security Association (SA)</strong> is a unidirectional agreement specifying security parameters.</p>
+                <ul class="list-disc pl-6">
+                    <li><strong>Parameters:</strong> Protocol, mode, algorithms, keys, lifetime, SPI.</li>
+                    <li><strong>Databases:</strong>
+                        <ul class="list-circle pl-6">
+                            <li><strong>SAD:</strong> Stores active SAs.</li>
+                            <li><strong>SPD:</strong> Defines packet handling policies.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p><strong>For Professionals:</strong> SAs are indexed by SPI, destination IP, and protocol. Example SAD entry:</p>
+                <pre class="bg-gray-800 text-white p-4 rounded-lg text-sm">
+SPI: 0x12345678
+Destination: 192.168.1.1
+Protocol: ESP
+Mode: Tunnel
+Encryption: AES-256
+Authentication: SHA256
+                </pre>
+            </div>
+        </section>
+
+        <!-- Key Management -->
+        <section class="bg-white shadow-xl rounded-xl p-8 mb-12">
+            <h2 id="key-management" class="text-3xl font-semibold mb-6 text-blue-800 border-b-2 border-blue-200 pb-4 cursor-pointer flex justify-between items-center collapsible-header" tabindex="0" role="button" aria-expanded="false">
+                Key Management: Manual vs. Automatic
+                <i class="fas fa-chevron-up text-blue-600 transition-transform duration-300"></i>
+            </h2>
+            <div class="collapsible-content prose max-w-none border border-gray-200 rounded-b-lg p-6 hidden">
+                <div class="kid-section">
+                    <h3 class="text-xl font-semibold text-yellow-600 mb-3 flex items-center">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>For Kids: Sharing the Key
+                    </h3>
+                    <p>Keys are like secret passwords for your lock. Manual is when you tell your friend the password yourself. Automatic is when a robot helper makes a new password and shares it safely!</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Key exchange illustration" class="w-full max-w-2xl mx-auto rounded-lg shadow-md mb-4">
+                <p class="image-caption">Keys secure IPSec communications.</p>
+                <p>IPSec requires cryptographic keys, managed via:</p>
+                <h3 class="text-2xl font-medium mt-6 mb-3 text-blue-700">1. Manual Keying</h3>
+                <p>Administrators configure keys/SAs manually.</p>
+                <ul class="list-disc pl-6">
+                    <li><strong>Pros:</strong> Simple for small setups.</li>
+                    <li><strong>Cons:</strong> Non-scalable, no PFS.</li>
+                </ul>
+                <h3 class="text-2xl font-medium mt-6 mb-3 text-blue-700">2. Automatic Keying (IKE)</h3>
+                <p>Uses IKE for dynamic key exchange.</p>
+                <ul class="list-disc pl-6">
+                    <li><strong>Pros:</strong> Scalable, supports PFS, key rotation.</li>
+                </ul>
+                <p><strong>For Professionals:</strong> IKE is standard, using Diffie-Hellman for PFS. Example IKE policy:</p>
+                <pre class="bg-gray-800 text-white p-4 rounded-lg text-sm">
+crypto isakmp policy 10
+encryption aes 256
+authentication pre-share
+group 14
+                </pre>
+            </div>
+        </section>
+
+        <!-- Internet Key Exchange -->
+        <section class="bg-white shadow-xl rounded-xl p-8 mb-12">
+            <h2 id="internet-key-exchange" class="text-3xl font-semibold mb-6 text-blue-800 border-b-2 border-blue-200 pb-4 cursor-pointer flex justify-between items-center collapsible-header" tabindex="0" role="button" aria-expanded="false">
+                Internet Key Exchange (IKE)
+                <i class="fas fa-chevron-up text-blue-600 transition-transform duration-300"></i>
+            </h2>
+            <div class="collapsible-content prose max-w-none border border-gray-200 rounded-b-lg p-6 hidden">
+                <div class="kid-section">
+                    <h3 class="text-xl font-semibold text-yellow-600 mb-3 flex items-center">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>For Kids: The Deal Maker
+                    </h3>
+                    <p>IKE is like a friendly robot who helps two friends agree on how to keep their notes safe. It makes sure they have the right locks and keys before they start talking!</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1516321310767-0f6c0af4a413?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="IKE negotiation illustration" class="w-full max-w-2xl mx-auto rounded-lg shadow-md mb-4">
+                <p class="image-caption">IKE negotiates secure connections.</p>
+                <p><strong>IKE</strong> automates SA and key setup over UDP (500/4500).</p>
+                <h3 class="text-2xl font-medium mt-6 mb-3 text-blue-700">Phase 1: Secure Channel</h3>
+                <p>Establishes an IKE SA for secure negotiation.</p>
+                <ul class="list-disc pl-6">
+                    <li><strong>Modes:</strong> Main (6 messages) or Aggressive (3 messages).</li>
+                    <li><strong>Authentication:</strong> PSK or certificates.</li>
+                </ul>
+                <h3 class="text-2xl font-medium mt-6 mb-3 text-blue-700">Phase 2: IPSec SAs</h3>
+                <p>Negotiates SAs for data traffic (Quick Mode).</p>
+                <p><strong>For Professionals:</strong> IKEv2 is preferred over IKEv1 for efficiency and NAT traversal. Example IKEv2 config:</p>
+                <pre class="bg-gray-800 text-white p-4 rounded-lg text-sm">
+crypto ikev2 proposal MY_PROPOSAL
+encryption aes-256
+integrity sha256
+group 19
+                </pre>
+            </div>
+        </section>
+
+        <!-- Cryptographic Algorithms -->
+        <section class="bg-white shadow-xl rounded-xl p-8 mb-12">
+            <h2 id="crypto-algorithms" class="text-3xl font-semibold mb-6 text-blue-800 border-b-2 border-blue-200 pb-4 cursor-pointer flex justify-between items-center collapsible-header" tabindex="0" role="button" aria-expanded="false">
+                Cryptographic Algorithms
+                <i class="fas fa-chevron-up text-blue-600 transition-transform duration-300"></i>
+            </h2>
+            <div class="collapsible-content prose max-w-none border border-gray-200 rounded-b-lg p-6 hidden">
+                <div class="kid-section">
+                    <h3 class="text-xl font-semibold text-yellow-600 mb-3 flex items-center">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>For Kids: Magic Codes
+                    </h3>
+                    <p>Algorithms are like magic spells that lock your note or check if it’s safe. Some spells hide it, and others make sure nobody changed it!</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cryptography illustration" class="w-full max-w-2xl mx-auto rounded-lg shadow-md mb-4">
+                <p class="image-caption">Algorithms secure IPSec data.</p>
+                <ul class="list-disc pl-6">
+                    <li><strong>Authentication:</strong> HMAC-SHA256 (preferred), HMAC-SHA1, HMAC-MD5 (deprecated).</li>
+                    <li><strong>Encryption:</strong> AES-256 (standard), 3DES (outdated), DES (obsolete).</li>
+                    <li><strong>Key Exchange:</strong> Diffie-Hellman (Group 14+).</li>
+                </ul>
+                <p><strong>For Professionals:</strong> Use AES-GCM for combined encryption/integrity. Example:</p>
+                <pre class="bg-gray-800 text-white p-4 rounded-lg text-sm">
+crypto ipsec transform-set MY_SET esp-aes-256-gcm
+                </pre>
+            </div>
+        </section>
+
+        <!-- Applications -->
+        <section class="bg-white shadow-xl rounded-xl p-8 mb-12">
+            <h2 id="ipsec-applications" class="text-3xl font-semibold mb-6 text-blue-800 border-b-2 border-blue-200 pb-4 cursor-pointer flex justify-between items-center collapsible-header" tabindex="0" role="button" aria-expanded="false">
+                Real-World Applications
+                <i class="fas fa-chevron-up text-blue-600 transition-transform duration-300"></i>
+            </h2>
+            <div class="collapsible-content prose max-w-none border border-gray-200 rounded-b-lg p-6 hidden">
+                <div class="kid-section">
+                    <h3 class="text-xl font-semibold text-yellow-600 mb-3 flex items-center">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>For Kids: Safe Adventures
+                    </h3>
+                    <p>IPSec is like a superhero protecting your messages when you video chat, work from home, or play online games. It keeps bad guys away!</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1516321310767-0f6c0af4a413?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="VPN application illustration" class="w-full max-w-2xl mx-auto rounded-lg shadow-md mb-4">
+                <p class="image-caption">IPSec powers secure VPNs.</p>
+                <ul class="list-disc pl-6">
+                    <li><strong>VPNs:</strong> Site-to-site, remote access.</li>
+                    <li><strong>Server Security:</strong> Cloud/data center traffic.</li>
+                    <li><strong>IoT/Wireless:</strong> Enhances device security.</li>
+                </ul>
+                <p><strong>For Professionals:</strong> IPSec is critical for SD-WAN and zero-trust architectures. Example VPN setup:</p>
+                <pre class="bg-gray-800 text-white p-4 rounded-lg text-sm">
+crypto ipsec profile MY_PROFILE
+set transform-set MY_SET
+set ikev2-profile MY_IKEV2_PROFILE
+                </pre>
+            </div>
+        </section>
+
+        <!-- AH vs. ESP -->
+        <section class="bg-white shadow-xl rounded-xl p-8 mb-12">
+            <h2 id="ah-vs-esp" class="text-3xl font-semibold mb-6 text-blue-800 border-b-2 border-blue-200 pb-4 cursor-pointer flex justify-between items-center collapsible-header" tabindex="0" role="button" aria-expanded="false">
+                AH vs. ESP Comparison
+                <i class="fas fa-chevron-up text-blue-600 transition-transform duration-300"></i>
+            </h2>
+            <div class="collapsible-content prose max-w-none border border-gray-200 rounded-b-lg p-6 hidden">
+                <div class="kid-section">
+                    <h3 class="text-xl font-semibold text-yellow-600 mb-3 flex items-center">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>For Kids: Superhero Powers
+                    </h3>
+                    <p>AH is a superhero who checks if your note is okay. ESP is a superhero who hides it and checks it. ESP is stronger because it can do both!</p>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>AH</th>
+                            <th>ESP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Confidentiality</strong></td>
+                            <td>No</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Authentication</strong></td>
+                            <td>Yes</td>
+                            <td>Yes (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Integrity</strong></td>
+                            <td>Yes</td>
+                            <td>Yes (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Replay Protection</strong></td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Protocol Number</strong></td>
+                            <td>51</td>
+                            <td>50</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><strong>For Professionals:</strong> ESP’s versatility makes it dominant. AH is niche, used when header authentication is critical.</p>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="bg-white shadow-xl rounded-xl p-8 mb-12">
+            <h2 id="summary" class="text-3xl font-semibold mb-6 text-blue-800 border-b-2 border-blue-200 pb-4 cursor-pointer flex justify-between items-center collapsible-header" tabindex="0" role="button" aria-expanded="false">
+                Summary
+                <i class="fas fa-chevron-up text-blue-600 transition-transform duration-300"></i>
+            </h2>
+            <div class="collapsible-content prose max-w-none border border-gray-200 rounded-b-lg p-6 hidden">
+                <div class="kid-section">
+                    <h3 class="text-xl font-semibold text-yellow-600 mb-3 flex items-center">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>For Kids: The Big Picture
+                    </h3>
+                    <p>IPSec is like a superhero team keeping your messages safe with locks, checks, and secret codes. It helps you talk to friends safely online!</p>
+                </div>
+                <p>IPSec secures IP traffic with:</p>
+                <ul class="list-disc pl-6">
+                    <li><strong>Protocols:</strong> AH (authentication) and ESP (encryption).</li>
+                    <li><strong>Modes:</strong> Transport (payload) and Tunnel (entire packet).</li>
+                    <li><strong>SAs:</strong> Security agreements.</li>
+                    <li><strong>IKE:</strong> Automates key/SA setup.</li>
+                </ul>
+                <p><strong>For Professionals:</strong> IPSec is foundational for secure networking, evolving with standards like IKEv2 and AES-GCM.</p>
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section class="bg-white shadow-xl rounded-xl p-8 mb-12">
+            <h2 id="resources" class="text-3xl font-semibold mb-6 text-blue-800 border-b-2 border-blue-200 pb-4 cursor-pointer flex justify-between items-center collapsible-header" tabindex="0" role="button" aria-expanded="false">
+                Resources
+                <i class="fas fa-chevron-up text-blue-600 transition-transform duration-300"></i>
+            </h2>
+            <div class="collapsible-content prose max-w-none border border-gray-200 rounded-b-lg p-6 hidden">
+                <div class="kid-section">
+                    <h3 class="text-xl font-semibold text-yellow-600 mb-3 flex items-center">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>For Kids: Learn More
+                    </h3>
+                    <p>Ask your parents or teacher to find fun videos about keeping things safe online!</p>
+                </div>
+                <ul class="list-disc pl-6">
+                    <li><a href="https://tools.ietf.org/html/rfc4301" target="_blank" class="text-blue-600 hover:underline">RFC 4301</a></li>
+                    <li><a href="https://www.cloudflare.com/learning/network-layer/what-is-ipsec/" target="_blank" class="text-blue-600 hover:underline">Cloudflare IPSec Guide</a></li>
+                    <li><a href="https://csrc.nist.gov/projects/ipsec" target="_blank" class="text-blue-600 hover:underline">NIST IPSec</a></li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-blue-900 text-white py-8 text-center text-sm">
+        <div class="container mx-auto px-4">
+            <p>© 2025 IP Security Guide. For educational purposes.</p>
+            <p class="mt-2">Styled with <a href="https://tailwindcss.com/" target="_blank" class="text-blue-200 hover:underline">Tailwind CSS</a>.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const headers = document.querySelectorAll('.collapsible-header');
+
+            headers.forEach(header => {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('i');
+
+                const toggleContent = () => {
+                    const isHidden = content.classList.contains('hidden');
+                    content.classList.toggle('hidden', !isHidden);
+                    icon.classList.toggle('rotate-180', !isHidden);
+                    header.setAttribute('aria-expanded', isHidden);
+                };
+
+                header.addEventListener('click', toggleContent);
+                header.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        toggleContent();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.toc-list a').forEach(anchor => {
+                anchor.addEventListener('click', e => {
+                    e.preventDefault();
+                    const targetId = anchor.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        const header = targetElement.closest('.collapsible-header') || targetElement;
+                        const content = header.nextElementSibling;
+                        const icon = header.querySelector('i');
+
+                        if (content?.classList.contains('hidden')) {
+                            content.classList.remove('hidden');
+                            icon.classList.remove('rotate-180');
+                            header.setAttribute('aria-expanded', 'true');
+                        }
+
+                        header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
